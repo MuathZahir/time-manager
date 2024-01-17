@@ -1,0 +1,239 @@
+﻿
+*, ::after, ::before {
+    box-sizing: border-box;
+    --main-color: #4549B0;
+    --main-color-light: #545AC1;
+    --secondary-color: #282828;
+    --secondary-color-light: #393939;
+    --secondary-color-dark: #1F1F1F;
+}
+
+body {
+    margin: 0;
+}
+
+.text-header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 2rem;
+    letter-spacing: 0.025em;
+    color: #fff;
+    text-align: center;
+}
+
+.inline-center {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: var(--secondary-color-dark);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color-light);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/*Button Styles*/
+
+.btn {
+    display: inline-block;
+    padding: 1rem 1rem;
+    border-radius: 1rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    letter-spacing: 0.025em;
+    text-align: left;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    width: 75%;
+    margin: 0 auto;
+    border: none;
+}
+
+.btn-primary {
+    background-color: var(--main-color);
+    color: #fff;
+
+}
+    .btn-primary:hover {
+        background-color: var(--main-color-light);
+    }
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+    .btn-secondary:hover {
+        background-color: var(--secondary-color-light);
+    }
+
+/*Input Styles*/
+
+.text-input {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #343434;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    letter-spacing: 0.025em;
+    text-align: left;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border: none;
+}
+    .text-input:focus {
+        outline: none;
+        background-color: #565656;
+    }
+
+.date-input {
+    display: inline-block;
+    position: relative;
+    width: 300px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #343434;
+    color: rgba(255, 255, 255, 0.30);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border: none;
+    user-select: none;
+    cursor: pointer;
+}
+    .date-input:focus {
+        outline: none;
+        background-color: #565656;
+    }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    position: absolute;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+input[type="time"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    position: absolute;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+.switch-toggle {
+    display: flex;
+    background: #343434;
+    border-radius: 0.5rem;
+    width: 100%;
+}
+
+.switch-toggle input {
+    position: absolute;
+    opacity: 0;
+}
+
+.switch-toggle input + label {
+    padding: 7px;
+    float: left;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    flex-grow: 1;
+    text-align: center;
+    border-radius: 0.5rem;
+}
+
+    .switch-toggle input:checked + label {
+        background: var(--main-color);
+    }
+
+.checkbox-input {
+    appearance: none;
+}
+
+    .checkbox-input + label {
+        display: inline-block;
+        padding: 10px;
+        cursor: pointer;
+        color: white;
+        background-color: var(--secondary-color-light);
+        user-select: none;
+        transition: all 0.25s ease;
+        border-radius: 0.5rem;
+        width: inherit;
+        text-align: center;
+    }
+
+    .checkbox-input:checked + label {
+            background-color: var(--main-color);
+        }
+
+.select-input {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #343434;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+    letter-spacing: 0.025em;
+    text-align: left;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    border: none;
+}
+    .select-input:focus {
+        outline: none;
+        background-color: #565656;
+    }
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}

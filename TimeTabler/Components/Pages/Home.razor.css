@@ -1,0 +1,111 @@
+﻿
+.schedule-container {
+    display: flex;
+    min-height: 100%;
+}
+
+.time-table-container {
+    min-height: 100%;
+    scrollbar-gutter: stable;
+    width: 75%;
+    float: right;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.left-menu-container {
+    flex: 1;
+    min-width: 200px;
+    float: left;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tasks-container {
+    margin: 10px 0;
+    flex-grow: 1;
+}
+
+.tasks {
+    display: flex;
+    width: 100%;
+    padding: 0rem 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 19.006px;
+    flex-shrink: 0;
+    overflow: auto;
+}
+
+.task {
+    width: 100%;
+    height: 67px;
+    display: flex;
+    cursor: pointer;
+}
+
+.task .task-info {
+    float: left;
+    border-radius: 7px 0 0 7px;
+    background: #141414;
+    color: white;
+    width: 80%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.task .task-color {
+    float: right;
+    border-radius: 0 7px 7px 0;
+    height: 100%;
+    background-color: #D17777;
+    flex-grow: 1;
+}
+
+.task .task-info .task-name {
+    font-size: 20px;
+    font-weight: 500;
+margin: 5px 20px;
+}
+
+.task .task-info .task-time {
+    font-size: 15px;
+    font-weight: 400;
+    margin: 5px 20px;
+}
+
+.task-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.task-dialog-body{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.labeled-input-container{
+    display: flex;
+    flex-direction: row;
+    color: #fff;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.labeled-input-container > label{
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: center;
+}

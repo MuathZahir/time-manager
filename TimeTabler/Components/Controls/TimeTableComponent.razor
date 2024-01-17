@@ -1,0 +1,124 @@
+﻿@using TimeTabler.Models
+<table class="time-table">
+    <thead>
+        <tr>
+            <th><i class="fa-solid fa-chevron-left" style="font-size: 30px;"></i></th>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th><i class="fa-solid fa-chevron-right" style="font-size: 30px;"></i></th>
+        </tr>
+    </thead>
+
+
+    <tbody>
+
+
+        @for (var i = StartTime; i < EndTime; i = i.AddHours(0.5))
+        {
+            <tr>
+                <th>@i.ToString("hh\\:mm")</th>
+                @foreach (var day in DaysShown)
+                {
+                    var task = Tasks.FirstOrDefault(x => x.Date == day && x.StartTime == i);
+                    var block = Blocks.FirstOrDefault(x => x.Date == day && x.StartTime == i);
+
+                    <td>
+                        @if (task != null)
+                        {
+                            var taskHeight = (task.EndTime - task.StartTime).TotalHours * 2 * 47 + 3 * 2; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
+
+                            <div class="task">
+                                <div class="task-border">
+                                    <div class="task-extension" style="height: @(taskHeight)px;">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        
+                        @if (block != null)
+                        {
+                            var blockHeight = (block.EndTime - block.StartTime).TotalHours * 2 * 47 + 3 * 2; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
+
+                            <div class="block">
+                                <div class="block-border">
+                                    <div class="block-extension" style="height: @(blockHeight)px;">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @if (day == DateOnly.FromDateTime(DateTime.Today) && i.Hour == DateTime.Now.Hour && i.Minute == DateTime.Now.Minute / 30 * 30)
+                        {
+                            <div id="current-time" style="top: @(-47/2.0 + 47/30.0 * (DateTime.Now.Minute - i.Minute))px"></div>
+                        }
+                    </td>
+                }
+            </tr>
+        }
+
+
+    </tbody>
+
+</table>
+
+@code
+{
+    [Parameter] public TimeOnly StartTime { get; set; } = new TimeOnly(8, 0);
+
+    [Parameter] public TimeOnly EndTime { get; set; } = new TimeOnly(21, 0);
+
+    [Parameter] public List<TaskModel> Tasks { get; set; } = new List<TaskModel>();
+    [Parameter] public List<BlockModel> Blocks { get; set; } = new List<BlockModel>();
+    [Parameter] public List<GroupModel> Groups { get; set; } = new List<GroupModel>();
+
+    public List<DateOnly> DaysShown { get; set; } = new List<DateOnly>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        var today = DateTime.Today;
+
+        // Get the start of the week
+        var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
+
+        // Get the end of the week
+        var endOfWeek = startOfWeek.AddDays(7);
+
+        // Add the days to the list
+        for (var day = startOfWeek; day < endOfWeek; day = day.AddDays(1))
+        {
+            DaysShown.Add(DateOnly.FromDateTime(day));
+        }
+
+    }
+
+    private void NextWeek()
+    {
+        var lastDay = DaysShown.Last();
+        var nextWeek = lastDay.AddDays(1);
+        var endOfWeek = nextWeek.AddDays(7);
+        DaysShown.Clear();
+        for (var day = nextWeek; day < endOfWeek; day = day.AddDays(1))
+        {
+            DaysShown.Add(day);
+        }
+    }
+
+    private void PreviousWeek()
+    {
+        var firstDay = DaysShown.First();
+        var previousWeek = firstDay.AddDays(-7);
+        var endOfWeek = previousWeek.AddDays(7);
+        DaysShown.Clear();
+        for (var day = previousWeek; day < endOfWeek; day = day.AddDays(1))
+        {
+            DaysShown.Add(day);
+        }
+    }
+
+}

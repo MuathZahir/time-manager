@@ -1,0 +1,93 @@
+﻿.time-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 3px;
+    background: #0E0E0E;
+    color: #fff;
+    font-family: -system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.time-table th, td {
+    text-align: center;
+    width: 175px;
+    height: 47px;
+}
+
+.time-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #0E0E0E;
+}
+
+.time-table tbody td {
+    font-size: 0.8rem;
+    font-weight: bold;
+    line-height: 1.4;
+
+    transition: opacity 0.3s ease;
+    user-select: none;
+    border-radius: 12.005px;
+    background: #141414;
+    padding: 0;
+}
+
+.time-table tbody td:hover {
+    background-color: #111;
+}
+
+.time-table td > span {
+    font-size: 0.8em;
+    font-weight: normal;
+    display: block;
+    width: 100%;
+}
+
+.task {
+    border-radius: 12.005px;
+    background: #D17777;
+    height: 47px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.task .task-border {
+    border-radius: 12.005px;
+    outline: 3px solid #de9292;
+    outline-offset: -3px;
+    opacity: 0.4;
+}
+
+.task .task-extension {
+    background: #D17777;
+    border-radius: 12.005px;
+    opacity: 0.2;
+}
+
+.block {
+    border-radius: 12.005px;
+    height: 47px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+}
+
+.block .block-border {
+    border-radius: 12.005px;
+    outline: 3px dashed #de9292;
+    outline-offset: -3px;
+    opacity: 0.4;
+}
+
+.block .block-extension {
+    background: #D17777;
+    border-radius: 12.005px;
+    opacity: 0.2;
+}
+
+#current-time {
+    position: relative;
+    border-top: 3px dotted #aaa;
+    width: 100%;
+}

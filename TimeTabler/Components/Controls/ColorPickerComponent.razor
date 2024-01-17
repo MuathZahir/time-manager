@@ -1,0 +1,25 @@
+﻿@using System.Drawing
+
+<InputRadioGroup @bind-Value="Value">
+    <InputRadio id=@($"color") Value="@Value" class="color-radio"></InputRadio>
+    <InputRadio id=@($"color2") Value="@Value" class="color-radio"></InputRadio>
+@*     <div class="grid">
+        @foreach (var color in DefaultColors)
+        {
+            <InputRadio id=@($"color-{color.Name}") Value="@color" class="color-radio"></InputRadio>
+            <label for=@($"color-{color.Name}") style="background-color: @(ToHex(color))"></label>
+        }
+    </div> *@
+</InputRadioGroup>
+
+@code
+{
+    [Parameter] public Color Value { get; set; }
+    [Parameter] public EventCallback<Color> ValueChanged { get; set; }
+    [Parameter] public List<Color> DefaultColors { get; set; } = new List<Color>();
+
+    private string ToHex(Color color)
+    {
+        return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+    }
+}
