@@ -1,25 +1,30 @@
-﻿@using System.Drawing
+﻿@using TimeTabler.Models
 
-<InputRadioGroup @bind-Value="Value">
-    <InputRadio id=@($"color") Value="@Value" class="color-radio"></InputRadio>
-    <InputRadio id=@($"color2") Value="@Value" class="color-radio"></InputRadio>
-@*     <div class="grid">
+<InputRadioGroup @bind-Value="HexValue">
+    <div class="grid colors">
         @foreach (var color in DefaultColors)
         {
-            <InputRadio id=@($"color-{color.Name}") Value="@color" class="color-radio"></InputRadio>
-            <label for=@($"color-{color.Name}") style="background-color: @(ToHex(color))"></label>
+            <InputRadio id=@($"color-{color.HexValue}") Value="@color.HexValue" class="color-radio" style="display: none;"></InputRadio>
+            <label for=@($"color-{color.HexValue}") style="background-color: @(color.HexValue)"></label>
         }
-    </div> *@
+    </div>
 </InputRadioGroup>
 
 @code
 {
+    private string _hexValue = "#000000";
+    public string HexValue
+    {
+        get => _hexValue;
+        set
+        {
+            _hexValue = value;
+            Value = new Color(value);
+        }
+    }
+
     [Parameter] public Color Value { get; set; }
     [Parameter] public EventCallback<Color> ValueChanged { get; set; }
     [Parameter] public List<Color> DefaultColors { get; set; } = new List<Color>();
-
-    private string ToHex(Color color)
-    {
-        return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
-    }
+    
 }

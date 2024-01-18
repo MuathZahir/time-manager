@@ -2,6 +2,7 @@
 @using TimeTabler.Models
 @using DayOfWeek = TimeTabler.Models.DayOfWeek
 @using System.Drawing
+@using Color = TimeTabler.Models.Color
 
 <PageTitle>Home</PageTitle>
 
@@ -96,7 +97,7 @@
                             </InputSelect>
                         </div>
                 </EditForm>
-                <EditForm id="group-form" Model="GroupCreated" class=@("page" + (SelectedType == ScheduleItemType.Group ? " active" : ""))>
+                <EditForm id="group-form" Model="GroupCreated" class=@("page" + (SelectedType == ScheduleItemType.Group ? " active" : "")) OnValidSubmit="CreateGroup">
                     <div class="labeled-input-container">
                         <InputText id="group-name" DisplayName="Group Name" @bind-Value="@GroupCreated.Name" placeholder="Name" class="text-input" autocomplete="off"></InputText>
                     </div>

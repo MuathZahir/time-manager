@@ -3,6 +3,7 @@ using System.Drawing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using TimeTabler.Models;
+using Color = TimeTabler.Models.Color;
 using DayOfWeek = TimeTabler.Models.DayOfWeek;
 
 namespace TimeTabler.Components.Pages
@@ -19,21 +20,21 @@ namespace TimeTabler.Components.Pages
 
         private List<TaskModel> Tasks { get; set; } = new List<TaskModel>()
         {
-            new TaskModel()
+            new()
             {
                 Title = "Task 1",
                 StartTime = new TimeOnly(8, 0),
                 EndTime = new TimeOnly(9, 15),
                 Date = new DateOnly(2024,1,10)
             },
-            new TaskModel()
+            new()
             {
                 Title = "Task 3",
                 StartTime = new TimeOnly(10, 0),
                 EndTime = new TimeOnly(17, 30),
                 Date = new DateOnly(2024,1,2)
             },
-            new TaskModel()
+            new()
             {
                 Title = "Task 2",
                 StartTime = new TimeOnly(18, 0),
@@ -44,21 +45,21 @@ namespace TimeTabler.Components.Pages
 
         private List<BlockModel> Blocks { get; set; } = new List<BlockModel>()
         {
-            new BlockModel()
+            new()
             {
                 Title = "Block 1",
                 StartTime = new TimeOnly(10, 0),
                 EndTime = new TimeOnly(11, 15),
                 Date = new DateOnly(2024,1,10)
             },
-            new BlockModel()
+            new()
             {
                 Title = "Block 3",
                 StartTime = new TimeOnly(10, 0),
                 EndTime = new TimeOnly(17, 30),
                 Date = new DateOnly(2024,1,2)
             },
-            new BlockModel()
+            new()
             {
                 Title = "Block 2",
                 StartTime = new TimeOnly(18, 0),
@@ -85,22 +86,37 @@ namespace TimeTabler.Components.Pages
 
         public List<Color> DefaultColors { get; set; } = new List<Color>()
         {
-            Color.Red,
-            Color.Blue,
-            Color.Green,
-            Color.Yellow,
-            Color.Purple,
-            Color.Orange,
-            Color.Brown,
-            Color.Pink,
-            Color.Gray,
-            Color.Black,
+            new("#CE4444"),
+            new("#CE6544"),
+            new("#CEC844"),
+            new("#89CE44"),
+            new("#47CE44"),
+            new("#44CE83"),
+            new("#44ADCE"),
+            new("#4462CE"),
+            new("#5744CE"),
+            new("#BB44CE"),
+            new("#CE4476"),
         };
 
         private void CreateTask(EditContext context)
         {
             Tasks.Add(TaskCreated);
             TaskCreated = new TaskModel();
+            CreateDialogOpened = false;
+        }
+
+        private void CreateBlock(EditContext context)
+        {
+            Blocks.Add(BlockCreated);
+            BlockCreated = new BlockModel();
+            CreateDialogOpened = false;
+        }
+
+        private void CreateGroup(EditContext context)
+        {
+            Groups.Add(GroupCreated);
+            GroupCreated = new GroupModel();
             CreateDialogOpened = false;
         }
     }

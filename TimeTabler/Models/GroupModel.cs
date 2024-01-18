@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Drawing;
 using System.Globalization;
 
 namespace TimeTabler.Models
 {
+    [TypeConverter(typeof(GroupModelConverter))]
     public class GroupModel
     {
         public int Id { get; set; }
@@ -18,7 +18,26 @@ namespace TimeTabler.Models
 
         public string GetColorString()
         {
-            return ColorTranslator.ToHtml(Color);
+            return Color.HexValue;
+        }
+    }
+
+    public class GroupModelConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value is string)
+            {
+                var group = new GroupModel();
+                group.Name = value as string;
+                return group;
+            }
+            return base.ConvertFrom(context, culture, value);
         }
     }
 
