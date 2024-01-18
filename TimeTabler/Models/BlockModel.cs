@@ -10,8 +10,7 @@ namespace TimeTabler.Models
         public TimeOnly EndTime { get; set; }
         public bool IsAllDay { get; set; }
         public bool IsRecurring { get; set; }
-        public RecurringDays RecurringDays { get; set; }
-        [Required]
-        public GroupModel Group { get; set; }
+        public RecurringDays RecurringDays { get; set; } = new();
+        [Required] public GroupModel? Group { get; set; }
     }
 }

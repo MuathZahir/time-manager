@@ -3,9 +3,9 @@
     box-sizing: border-box;
     --main-color: #4549B0;
     --main-color-light: #545AC1;
-    --secondary-color: #282828;
+    --secondary-color: #1A1A1A;
     --secondary-color-light: #393939;
-    --secondary-color-dark: #1F1F1F;
+    --secondary-color-dark: #121212;
 }
 
 body {
@@ -67,7 +67,7 @@ body {
     text-decoration: none;
     transition: background-color 0.3s ease;
     cursor: pointer;
-    width: 75%;
+    width: 100%;
     margin: 0 auto;
     border: none;
 }
@@ -222,10 +222,11 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     text-decoration: none;
     transition: background-color 0.3s ease;
     border: none;
+    outline: none;
+    cursor: pointer;
 }
     .select-input:focus {
         outline: none;
-        background-color: #565656;
     }
 
 .page {

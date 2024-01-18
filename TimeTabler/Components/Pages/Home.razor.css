@@ -7,17 +7,15 @@
 .time-table-container {
     min-height: 100%;
     scrollbar-gutter: stable;
-    width: 75%;
+    width: 100%;
     float: right;
     overflow: scroll;
     overflow-x: hidden;
 }
 
 .left-menu-container {
-    flex: 1;
-    min-width: 200px;
+    min-width: 350px;
     float: left;
-    width: 100px;
     display: flex;
     flex-direction: column;
 }
@@ -48,7 +46,7 @@
 .task .task-info {
     float: left;
     border-radius: 7px 0 0 7px;
-    background: #141414;
+    background-color: var(--secondary-color);
     color: white;
     width: 80%;
     height: 100%;
@@ -63,7 +61,6 @@
     float: right;
     border-radius: 0 7px 7px 0;
     height: 100%;
-    background-color: #D17777;
     flex-grow: 1;
 }
 
@@ -77,6 +74,8 @@ margin: 5px 20px;
     font-size: 15px;
     font-weight: 400;
     margin: 5px 20px;
+    color: var(--secondary-color-light);
+    font-weight: bold;
 }
 
 .task-buttons {
@@ -87,6 +86,7 @@ margin: 5px 20px;
     gap: 20px;
     width: 100%;
     margin: 20px 0;
+    padding: 0 2rem;
 }
 
 .task-dialog-body{

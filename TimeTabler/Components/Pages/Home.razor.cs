@@ -12,76 +12,76 @@ namespace TimeTabler.Components.Pages
     {
         private bool CreateDialogOpened { get; set; } = false;
 
-        private TaskModel TaskCreated { get; set; } = new TaskModel();
-        private BlockModel BlockCreated { get; set; } = new BlockModel();
-        private GroupModel GroupCreated { get; set; } = new GroupModel();
+        private TaskModel TaskCreated { get; set; } = new();
+        private BlockModel BlockCreated { get; set; } = new();
+        private GroupModel GroupCreated { get; set; } = new();
 
         private ScheduleItemType SelectedType { get; set; } = ScheduleItemType.Task;
 
         private List<TaskModel> Tasks { get; set; } = new List<TaskModel>()
         {
-            new()
-            {
-                Title = "Task 1",
-                StartTime = new TimeOnly(8, 0),
-                EndTime = new TimeOnly(9, 15),
-                Date = new DateOnly(2024,1,10)
-            },
-            new()
-            {
-                Title = "Task 3",
-                StartTime = new TimeOnly(10, 0),
-                EndTime = new TimeOnly(17, 30),
-                Date = new DateOnly(2024,1,2)
-            },
-            new()
-            {
-                Title = "Task 2",
-                StartTime = new TimeOnly(18, 0),
-                EndTime = new TimeOnly(19, 0),
-                Date = new DateOnly(2024,1,3)
-            },
+            //new()
+            //{
+            //    Title = "Task 1",
+            //    StartTime = new TimeOnly(8, 0),
+            //    EndTime = new TimeOnly(9, 15),
+            //    Date = new DateOnly(2024,1,10)
+            //},
+            //new()
+            //{
+            //    Title = "Task 3",
+            //    StartTime = new TimeOnly(10, 0),
+            //    EndTime = new TimeOnly(17, 30),
+            //    Date = new DateOnly(2024,1,2)
+            //},
+            //new()
+            //{
+            //    Title = "Task 2",
+            //    StartTime = new TimeOnly(18, 0),
+            //    EndTime = new TimeOnly(19, 0),
+            //    Date = new DateOnly(2024,1,3)
+            //},
         };
 
         private List<BlockModel> Blocks { get; set; } = new List<BlockModel>()
         {
-            new()
-            {
-                Title = "Block 1",
-                StartTime = new TimeOnly(10, 0),
-                EndTime = new TimeOnly(11, 15),
-                Date = new DateOnly(2024,1,10)
-            },
-            new()
-            {
-                Title = "Block 3",
-                StartTime = new TimeOnly(10, 0),
-                EndTime = new TimeOnly(17, 30),
-                Date = new DateOnly(2024,1,2)
-            },
-            new()
-            {
-                Title = "Block 2",
-                StartTime = new TimeOnly(18, 0),
-                EndTime = new TimeOnly(19, 0),
-                Date = new DateOnly(2024,1,3)
-            },
+            //new()
+            //{
+            //    Title = "Block 1",
+            //    StartTime = new TimeOnly(10, 0),
+            //    EndTime = new TimeOnly(11, 15),
+            //    Date = new DateOnly(2024,1,10)
+            //},
+            //new()
+            //{
+            //    Title = "Block 3",
+            //    StartTime = new TimeOnly(10, 0),
+            //    EndTime = new TimeOnly(17, 30),
+            //    Date = new DateOnly(2024,1,2)
+            //},
+            //new()
+            //{
+            //    Title = "Block 2",
+            //    StartTime = new TimeOnly(18, 0),
+            //    EndTime = new TimeOnly(19, 0),
+            //    Date = new DateOnly(2024,1,3)
+            //},
         };
 
         private List<GroupModel> Groups { get; set; } = new List<GroupModel>()
         {
-            new GroupModel()
-            {
-                Name = "Group 1",
-            },
-            new GroupModel()
-            {
-                Name = "Group 2",
-            },
-            new GroupModel()
-            {
-                Name = "Group 3",
-            }
+            //new GroupModel()
+            //{
+            //    Name = "Group 1",
+            //},
+            //new GroupModel()
+            //{
+            //    Name = "Group 2",
+            //},
+            //new GroupModel()
+            //{
+            //    Name = "Group 3",
+            //}
         };
 
         public List<Color> DefaultColors { get; set; } = new List<Color>()
@@ -119,6 +119,7 @@ namespace TimeTabler.Components.Pages
             GroupCreated = new GroupModel();
             CreateDialogOpened = false;
         }
+
     }
 
 }

@@ -1,8 +1,5 @@
 ﻿@page "/"
 @using TimeTabler.Models
-@using DayOfWeek = TimeTabler.Models.DayOfWeek
-@using System.Drawing
-@using Color = TimeTabler.Models.Color
 
 <PageTitle>Home</PageTitle>
 
@@ -17,7 +14,7 @@
                         <p class="task-name">@task.Title</p>
                         <p class="task-time">@task.StartTime.ToString("hh\\:mm") - @task.EndTime.ToString("hh\\:mm")</p>
                     </div>
-                    <div class="task-color" style="background-color: @(task.Group?.GetColorString() ?? "var(--main-color)")"></div>
+                    <div class="task-color" style="background-color: @(task.Group?.GetColorString() ?? "var(--secondary-color)")"></div>
                 </div>
             }
         </div>
@@ -30,86 +27,117 @@
 
 <DialogComponent Title="" Opened="CreateDialogOpened">
     <BodyContent>
-            <div class="task-dialog-body">
-                <ToggleGroupComponent @bind-SelectedValue="@SelectedType">
-                    <RadioButtonList>
-                        <InputRadio id="task-radio" Value="@ScheduleItemType.Task"></InputRadio>
-                        <label for="task-radio">Task</label>
-                        <InputRadio id="group-radio" Value="@ScheduleItemType.Group">Group</InputRadio>
-                        <label for="group-radio">Group</label>
-                        <InputRadio id="block-radio" Value="@ScheduleItemType.Block">Block</InputRadio>
-                        <label for="block-radio">Block</label>
-                    </RadioButtonList>
-                </ToggleGroupComponent>
-                <EditForm id="task-form" Model="TaskCreated" OnValidSubmit="CreateTask" class=@("page" + (SelectedType == ScheduleItemType.Task ? " active" : ""))>
-                        <InputText id="task-title" DisplayName="Task Title" @bind-Value="@TaskCreated.Title" placeholder="Title" class="text-input" autocomplete="off"></InputText>
-                        <div class="labeled-input-container">
-                            <label class="input-label" for="task-date">Start Date</label>
-                            <InputDate id="task-date" TValue="DateOnly" @bind-Value="@TaskCreated.Date" class="date-input"></InputDate>
-                        </div>
-                        <div class="inline-center full-width">
-                            <InputCheckbox @bind-Value="TaskCreated.IsAllDay" class="checkbox-input" id="task-allday"></InputCheckbox>
-                            <label for="task-allday">All Day</label>
-                        </div>
-                        <div class=@("page" + (!TaskCreated.IsAllDay ? " active" : ""))>
-                            <div class="labeled-input-container">
-                                <label class="input-label" for="task-starttime">From</label>
-                                <InputDate id="task-starttime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@TaskCreated.StartTime" class="date-input"></InputDate>
-                            </div>
-                            <div class="labeled-input-container">
-                                <label class="input-label" for="task-endtime">To</label>
-                                <InputDate id="task-endtime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@TaskCreated.EndTime" class="date-input"></InputDate>
-                            </div>
-                        </div>
-                        <div class="inline-center full-width">
-                            <InputCheckbox @bind-Value="TaskCreated.IsRecurring" class="checkbox-input" id="task-recurring"></InputCheckbox>
-                            <label for="task-recurring">Is Recurring</label>
-                        </div>
-                        <div class=@("page" + (TaskCreated.IsRecurring ? " active" : ""))>
-                            <div class="inline-center">
-                                <InputCheckbox id="task-recsun" @bind-Value="TaskCreated.RecurringDays.Sunday" class="checkbox-input"/>
-                                <label for="task-recsun">Sun</label>
-                                <InputCheckbox id="task-recmon" @bind-Value="TaskCreated.RecurringDays.Monday" class="checkbox-input"/>
-                                <label for="task-recmon">Mon</label>
-                                <InputCheckbox id="task-rectue" @bind-Value="TaskCreated.RecurringDays.Tuesday" class="checkbox-input"/>
-                                <label for="task-rectue">Tue</label>
-                                <InputCheckbox id="task-recwed" @bind-Value="TaskCreated.RecurringDays.Wednesday" class="checkbox-input"/>
-                                <label for="task-recwed">Wed</label>
-                                <InputCheckbox id="task-recthu" @bind-Value="TaskCreated.RecurringDays.Thursday" class="checkbox-input"/>
-                                <label for="task-recthu">Thu</label>
-                                <InputCheckbox id="task-recfri" @bind-Value="TaskCreated.RecurringDays.Friday" class="checkbox-input"/>
-                                <label for="task-recfri">Fri</label>
-                                <InputCheckbox id="task-recsat" @bind-Value="TaskCreated.RecurringDays.Saturday" class="checkbox-input"/>
-                                <label for="task-recsat">Sat</label>
-                            </div>
-                        </div>
-                        
-                        <div class="labeled-input-container">
-                            <label class="input-label" for="task-group">Group</label>
-                            <InputSelect id="task-group" @bind-Value="TaskCreated.Group" class="select-input">
-                                <ChildContent>
-                                    <option value="@(default(GroupModel))"></option>
-                                    @foreach (var group in Groups)
-                                    {
-                                        <option value="@group">@group.Name</option>
-                                    }
-                                </ChildContent>
-                            </InputSelect>
-                        </div>
-                </EditForm>
-                <EditForm id="group-form" Model="GroupCreated" class=@("page" + (SelectedType == ScheduleItemType.Group ? " active" : "")) OnValidSubmit="CreateGroup">
+        <div class="task-dialog-body">
+            <ToggleGroupComponent @bind-SelectedValue="@SelectedType">
+                <RadioButtonList>
+                    <InputRadio id="task-radio" Value="@ScheduleItemType.Task"></InputRadio>
+                    <label for="task-radio">Task</label>
+                    <InputRadio id="group-radio" Value="@ScheduleItemType.Group">Group</InputRadio>
+                    <label for="group-radio">Group</label>
+                    <InputRadio id="block-radio" Value="@ScheduleItemType.Block">Block</InputRadio>
+                    <label for="block-radio">Block</label>
+                </RadioButtonList>
+            </ToggleGroupComponent>
+            <EditForm id="task-form" Model="TaskCreated" OnValidSubmit="CreateTask" class=@("page" + (SelectedType == ScheduleItemType.Task ? " active" : ""))>
+                <InputText id="task-title" DisplayName="Task Title" @bind-Value="@TaskCreated.Title" placeholder="Title" class="text-input" autocomplete="off"></InputText>
+                <div class="labeled-input-container">
+                    <label class="input-label" for="task-date">Start Date</label>
+                    <InputDate id="task-date" TValue="DateOnly" @bind-Value="@TaskCreated.Date" class="date-input"></InputDate>
+                </div>
+                <div class="inline-center full-width">
+                    <InputCheckbox @bind-Value="TaskCreated.IsAllDay" class="checkbox-input" id="task-allday"></InputCheckbox>
+                    <label for="task-allday">All Day</label>
+                </div>
+                <div class=@("page" + (!TaskCreated.IsAllDay ? " active" : ""))>
                     <div class="labeled-input-container">
-                        <InputText id="group-name" DisplayName="Group Name" @bind-Value="@GroupCreated.Name" placeholder="Name" class="text-input" autocomplete="off"></InputText>
+                        <label class="input-label" for="task-starttime">From</label>
+                        <InputDate id="task-starttime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@TaskCreated.StartTime" class="date-input"></InputDate>
                     </div>
-                    <ColorPickerComponent @bind-Value="@GroupCreated.Color" DefaultColors="@DefaultColors"></ColorPickerComponent>
-                </EditForm>
-                <EditForm id="block-form" Model="BlockCreated" class=@("page" + (SelectedType == ScheduleItemType.Block ? " active" : ""))>
-                        <div class="labeled-input-container">
-                            <label class="input-label" for="block-date">Other Other Date</label>
-                            <InputDate id="block-date" TValue="DateOnly" @bind-Value="@BlockCreated.Date" class="date-input"></InputDate>
-                        </div>
-                </EditForm>
-            </div>
+                    <div class="labeled-input-container">
+                        <label class="input-label" for="task-endtime">To</label>
+                        <InputDate id="task-endtime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@TaskCreated.EndTime" class="date-input"></InputDate>
+                    </div>
+                </div>
+                <div class="inline-center full-width">
+                    <InputCheckbox @bind-Value="TaskCreated.IsRecurring" class="checkbox-input" id="task-recurring"></InputCheckbox>
+                    <label for="task-recurring">Is Recurring</label>
+                </div>
+                <div class=@("page" + (TaskCreated.IsRecurring ? " active" : ""))>
+                    <div class="inline-center">
+                        <InputCheckbox id="task-recsun" @bind-Value="TaskCreated.RecurringDays.Sunday" class="checkbox-input"/>
+                        <label for="task-recsun">Sun</label>
+                        <InputCheckbox id="task-recmon" @bind-Value="TaskCreated.RecurringDays.Monday" class="checkbox-input"/>
+                        <label for="task-recmon">Mon</label>
+                        <InputCheckbox id="task-rectue" @bind-Value="TaskCreated.RecurringDays.Tuesday" class="checkbox-input"/>
+                        <label for="task-rectue">Tue</label>
+                        <InputCheckbox id="task-recwed" @bind-Value="TaskCreated.RecurringDays.Wednesday" class="checkbox-input"/>
+                        <label for="task-recwed">Wed</label>
+                        <InputCheckbox id="task-recthu" @bind-Value="TaskCreated.RecurringDays.Thursday" class="checkbox-input"/>
+                        <label for="task-recthu">Thu</label>
+                        <InputCheckbox id="task-recfri" @bind-Value="TaskCreated.RecurringDays.Friday" class="checkbox-input"/>
+                        <label for="task-recfri">Fri</label>
+                        <InputCheckbox id="task-recsat" @bind-Value="TaskCreated.RecurringDays.Saturday" class="checkbox-input"/>
+                        <label for="task-recsat">Sat</label>
+                    </div>
+                </div>
+
+                <CustomInputSelectComponent TItem="GroupModel" Items="Groups" Selector="x => x.Name"
+                                            ValueChanged="g => TaskCreated.Group = g" ShowDefaultOption="true"
+                                            Class="select-input"/>
+            </EditForm>
+            <EditForm id="group-form" Model="GroupCreated" class=@("page" + (SelectedType == ScheduleItemType.Group ? " active" : "")) OnValidSubmit="CreateGroup">
+                <div class="labeled-input-container">
+                    <InputText id="group-name" DisplayName="Group Name" @bind-Value="@GroupCreated.Name" placeholder="Name" class="text-input" autocomplete="off"></InputText>
+                </div>
+                <ColorPickerComponent @bind-Value="GroupCreated.Color" DefaultColors="@DefaultColors"></ColorPickerComponent>
+            </EditForm>
+            <EditForm id="block-form" Model="BlockCreated" class=@("page" + (SelectedType == ScheduleItemType.Block ? " active" : "")) OnValidSubmit="CreateBlock">
+                <div class="labeled-input-container">
+                    <label class="input-label" for="block-date">Start Date</label>
+                    <InputDate id="block-date" TValue="DateOnly" @bind-Value="@BlockCreated.Date" class="date-input"></InputDate>
+                </div>
+                <div class="inline-center full-width">
+                    <InputCheckbox @bind-Value="BlockCreated.IsAllDay" class="checkbox-input" id="block-allday"></InputCheckbox>
+                    <label for="block-allday">All Day</label>
+                </div>
+                <div class=@("page" + (!BlockCreated.IsAllDay ? " active" : ""))>
+                    <div class="labeled-input-container">
+                        <label class="input-label" for="block-starttime">From</label>
+                        <InputDate id="block-starttime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@BlockCreated.StartTime" class="date-input"></InputDate>
+                    </div>
+                    <div class="labeled-input-container">
+                        <label class="input-label" for="block-endtime">To</label>
+                        <InputDate id="block-endtime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@BlockCreated.EndTime" class="date-input"></InputDate>
+                    </div>
+                </div>
+                <div class="inline-center full-width">
+                    <InputCheckbox @bind-Value="BlockCreated.IsRecurring" class="checkbox-input" id="block-recurring"></InputCheckbox>
+                    <label for="block-recurring">Is Recurring</label>
+                </div>
+                <div class=@("page" + (BlockCreated.IsRecurring ? " active" : ""))>
+                    <div class="inline-center">
+                        <InputCheckbox id="block-recsun" @bind-Value="BlockCreated.RecurringDays.Sunday" class="checkbox-input" />
+                        <label for="block-recsun">Sun</label>
+                        <InputCheckbox id="block-recmon" @bind-Value="BlockCreated.RecurringDays.Monday" class="checkbox-input" />
+                        <label for="block-recmon">Mon</label>
+                        <InputCheckbox id="block-rectue" @bind-Value="BlockCreated.RecurringDays.Tuesday" class="checkbox-input" />
+                        <label for="block-rectue">Tue</label>
+                        <InputCheckbox id="block-recwed" @bind-Value="BlockCreated.RecurringDays.Wednesday" class="checkbox-input" />
+                        <label for="block-recwed">Wed</label>
+                        <InputCheckbox id="block-recthu" @bind-Value="BlockCreated.RecurringDays.Thursday" class="checkbox-input" />
+                        <label for="block-recthu">Thu</label>
+                        <InputCheckbox id="block-recfri" @bind-Value="BlockCreated.RecurringDays.Friday" class="checkbox-input" />
+                        <label for="block-recfri">Fri</label>
+                        <InputCheckbox id="block-recsat" @bind-Value="BlockCreated.RecurringDays.Saturday" class="checkbox-input" />
+                        <label for="block-recsat">Sat</label>
+                    </div>
+                </div>
+
+                <CustomInputSelectComponent TItem="GroupModel" Items="Groups" Selector="x => x.Name"
+                                            ValueChanged="g => BlockCreated.Group = g" ShowDefaultOption="true"
+                                            Class="select-input"/>
+            </EditForm>
+        </div>
     </BodyContent>
     <FooterContent>
         <div class="dialog-footer-content">

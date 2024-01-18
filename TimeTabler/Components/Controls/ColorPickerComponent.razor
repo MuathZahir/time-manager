@@ -1,6 +1,6 @@
 ﻿@using TimeTabler.Models
 
-<InputRadioGroup @bind-Value="HexValue">
+<InputRadioGroup @bind-Value:get="HexValue" @bind-Value:set="OnSelect">
     <div class="grid colors">
         @foreach (var color in DefaultColors)
         {
@@ -26,5 +26,11 @@
     [Parameter] public Color Value { get; set; }
     [Parameter] public EventCallback<Color> ValueChanged { get; set; }
     [Parameter] public List<Color> DefaultColors { get; set; } = new List<Color>();
-    
+    [Parameter] public string Class { get; set; } = "";
+
+    private void OnSelect(string hex)
+    {
+        HexValue = hex;
+        ValueChanged.InvokeAsync(Value);
+    }
 }

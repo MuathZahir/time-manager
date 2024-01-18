@@ -115,7 +115,7 @@ main {
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: #121212;
+    background-color: var(--secondary-color-dark);
 }
 
 .top-bar .logo {

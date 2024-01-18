@@ -18,8 +18,15 @@
     <tbody>
 
 
-        @for (var i = StartTime; i < EndTime; i = i.AddHours(0.5))
+        @for (var i = StartTime; i < EndTime; i = i.AddHours(0.5, out _wrapped))
         {
+            @if (_wrapped > 0)
+            {
+                _wrapped = 0;
+                break;
+            }
+
+
             <tr>
                 <th>@i.ToString("hh\\:mm")</th>
                 @foreach (var day in DaysShown)
@@ -30,24 +37,21 @@
                     <td>
                         @if (task != null)
                         {
-                            var taskHeight = (task.EndTime - task.StartTime).TotalHours * 2 * 47 + 3 * 2; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
+                            var taskHeight = (task.EndTime - task.StartTime).TotalHours * (47 + 13) * 2 - 13; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
 
-                            <div class="task">
-                                <div class="task-border">
-                                    <div class="task-extension" style="height: @(taskHeight)px;">
-                                    </div>
+                            <div class="task" style="height: @(taskHeight)px; background-color: @(task.Group?.Color.HexValue ?? "var(--secondary-color-light)");">
+                                <div class="task-info">
+                                    @(task.Title)
                                 </div>
                             </div>
                         }
                         
                         @if (block != null)
                         {
-                            var blockHeight = (block.EndTime - block.StartTime).TotalHours * 2 * 47 + 3 * 2; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
+                            var blockHeight = (block.EndTime - block.StartTime).TotalHours * (47 + 13) * 2 - 13; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
 
-                            <div class="block">
-                                <div class="block-border">
-                                    <div class="block-extension" style="height: @(blockHeight)px;">
-                                    </div>
+                            <div class="block" style="height: @(blockHeight)px; outline: 3px dashed @(block.Group?.Color.HexValue ?? "var(--secondary-color-light)");">
+                                <div class="block-fill" style="background-color: @(block.Group?.Color.HexValue ?? "var(--secondary-color-light)");">
                                 </div>
                             </div>
                         }
@@ -68,15 +72,16 @@
 
 @code
 {
-    [Parameter] public TimeOnly StartTime { get; set; } = new TimeOnly(8, 0);
+    [Parameter] public TimeOnly StartTime { get; set; } = new(0, 0);
+    [Parameter] public TimeOnly EndTime { get; set; } = new(23, 59);
 
-    [Parameter] public TimeOnly EndTime { get; set; } = new TimeOnly(21, 0);
+    [Parameter] public List<TaskModel> Tasks { get; set; } = [];
+    [Parameter] public List<BlockModel> Blocks { get; set; } = [];
+    [Parameter] public List<GroupModel> Groups { get; set; } = [];
 
-    [Parameter] public List<TaskModel> Tasks { get; set; } = new List<TaskModel>();
-    [Parameter] public List<BlockModel> Blocks { get; set; } = new List<BlockModel>();
-    [Parameter] public List<GroupModel> Groups { get; set; } = new List<GroupModel>();
+    public List<DateOnly> DaysShown { get; set; } = [];
 
-    public List<DateOnly> DaysShown { get; set; } = new List<DateOnly>();
+    private int _wrapped = 0;
 
     protected override void OnInitialized()
     {
