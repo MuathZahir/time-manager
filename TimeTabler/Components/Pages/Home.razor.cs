@@ -2,6 +2,7 @@
 using System.Drawing;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using MudBlazor;
 using TimeTabler.Models;
 using Color = TimeTabler.Models.Color;
 using DayOfWeek = TimeTabler.Models.DayOfWeek;
@@ -10,7 +11,10 @@ namespace TimeTabler.Components.Pages
 {
     public partial class Home
     {
-        private bool CreateDialogOpened { get; set; } = false;
+        [CascadingParameter]
+        private MudTheme Theme { get; set; }
+
+        private bool CreateDialogOpened { get; set; } = true;
 
         private TaskModel TaskCreated { get; set; } = new();
         private BlockModel BlockCreated { get; set; } = new();
@@ -70,18 +74,28 @@ namespace TimeTabler.Components.Pages
 
         private List<GroupModel> Groups { get; set; } = new List<GroupModel>()
         {
-            //new GroupModel()
-            //{
-            //    Name = "Group 1",
-            //},
-            //new GroupModel()
-            //{
-            //    Name = "Group 2",
-            //},
-            //new GroupModel()
-            //{
-            //    Name = "Group 3",
-            //}
+            new GroupModel()
+            {
+                Name = "Group 1",
+                Color = new Color("#CE4444"),
+            },
+            new GroupModel()
+            {
+                Name = "Group 2",
+            },
+            new GroupModel()
+            {
+                Name = "Group 3",
+            }
+        };
+
+        private DialogOptions CreateDialogOptions { get; } = new()
+        {
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true,
+            CloseButton = true,
+            Position = DialogPosition.TopCenter,
+            ClassBackground = "mud-dialog-backdrop"
         };
 
         public List<Color> DefaultColors { get; set; } = new List<Color>()

@@ -1,16 +1,17 @@
 ﻿@inherits LayoutComponentBase
-<div class="layout-container">
-    <div class="top-bar">
-        <div class="logo">
-            <p style="margin: 0;">Schedule Maker</p>
-        </div>
-        <div class="menu-button">
-            <i class="fa-solid fa-bars"></i>
-        </div>
-    </div>
 
-    <div class="page">
-        @Body
+<MudThemeProvider Theme="Theme" IsDarkMode="true"/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<div class="layout-container">
+    <MudAppBar Fixed="false" Elevation="0">
+    </MudAppBar>
+    
+    <div class="d-flex flex-row main-page">
+        <CascadingValue Value="Theme">
+            @Body
+        </CascadingValue>
     </div>
 </div>
 
@@ -19,3 +20,29 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code
+{
+    public MudTheme Theme = new()
+    {
+        PaletteDark = new PaletteDark()
+        {
+            Primary = Colors.Indigo.Darken2,
+                PrimaryLighten = Colors.Indigo.Darken1,
+            Secondary = Colors.Grey.Darken3,
+                Tertiary = "#D6B340",
+            Background = "#121212",
+            AppbarBackground = "#121212",
+            Dark = Colors.Grey.Darken4,
+            DrawerBackground = Colors.Grey.Darken3,
+            Surface = Colors.Grey.Darken4,
+            Success = Colors.Green.Lighten1,
+        },
+        LayoutProperties = new LayoutProperties()
+        {
+            DrawerWidthLeft = "200px",
+            DrawerWidthRight = "200px",
+        },
+    };
+}
+

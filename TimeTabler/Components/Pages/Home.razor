@@ -1,5 +1,8 @@
 ﻿@page "/"
 @using TimeTabler.Models
+@using Color = MudBlazor.Color
+
+@inject IDialogService DialogService
 
 <PageTitle>Home</PageTitle>
 
@@ -9,143 +12,154 @@
         <div class="tasks">
             @foreach (var task in Tasks)
             {
-                <div class="task">
-                    <div class="task-info">
-                        <p class="task-name">@task.Title</p>
-                        <p class="task-time">@task.StartTime.ToString("hh\\:mm") - @task.EndTime.ToString("hh\\:mm")</p>
+                <MudPaper Width="100%" Height="80px">
+                    <div class="task">
+                        <div class="task-info">
+                            <p class="task-name">@task.Title</p>
+                            <p class="task-time">@task.StartTime?.ToString("hh\\:mm") - @task.EndTime?.ToString("hh\\:mm")</p>
+                        </div>
+                        <MudPaper Width="20%" Style=@($"background-color: {task.Group?.Color.HexValue ?? Theme.PaletteDark.Dark};margin:-10px;")></MudPaper>
                     </div>
-                    <div class="task-color" style="background-color: @(task.Group?.GetColorString() ?? "var(--secondary-color)")"></div>
-                </div>
+                </MudPaper>
             }
         </div>
     </div>
     <div class="task-buttons">
-        <button class="btn btn-primary" @onclick="() => { CreateDialogOpened = true; }"><i class="fa-solid fa-square-plus"></i>&nbsp; Create</button>
-        <button class="btn btn-secondary"><i class="fa-solid fa-file-import"></i>&nbsp; Import</button>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" 
+                   StartIcon="@Icons.Material.Filled.AddBox"
+                   FullWidth="true" Class="py-4" IconSize="Size.Large" 
+                   OnClick="() => { CreateDialogOpened = true; }">Create</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Dark" 
+                   StartIcon="@Icons.Material.Filled.ImportExport"
+                   FullWidth="true" Class="py-4" IconSize="Size.Large" 
+                   OnClick="() => { CreateDialogOpened = true; }">Import</MudButton>
     </div>
 </div>
 
-<DialogComponent Title="" Opened="CreateDialogOpened">
-    <BodyContent>
-        <div class="task-dialog-body">
-            <ToggleGroupComponent @bind-SelectedValue="@SelectedType">
-                <RadioButtonList>
-                    <InputRadio id="task-radio" Value="@ScheduleItemType.Task"></InputRadio>
-                    <label for="task-radio">Task</label>
-                    <InputRadio id="group-radio" Value="@ScheduleItemType.Group">Group</InputRadio>
-                    <label for="group-radio">Group</label>
-                    <InputRadio id="block-radio" Value="@ScheduleItemType.Block">Block</InputRadio>
-                    <label for="block-radio">Block</label>
-                </RadioButtonList>
-            </ToggleGroupComponent>
-            <EditForm id="task-form" Model="TaskCreated" OnValidSubmit="CreateTask" class=@("page" + (SelectedType == ScheduleItemType.Task ? " active" : ""))>
-                <InputText id="task-title" DisplayName="Task Title" @bind-Value="@TaskCreated.Title" placeholder="Title" class="text-input" autocomplete="off"></InputText>
-                <div class="labeled-input-container">
-                    <label class="input-label" for="task-date">Start Date</label>
-                    <InputDate id="task-date" TValue="DateOnly" @bind-Value="@TaskCreated.Date" class="date-input"></InputDate>
-                </div>
-                <div class="inline-center full-width">
-                    <InputCheckbox @bind-Value="TaskCreated.IsAllDay" class="checkbox-input" id="task-allday"></InputCheckbox>
-                    <label for="task-allday">All Day</label>
-                </div>
-                <div class=@("page" + (!TaskCreated.IsAllDay ? " active" : ""))>
-                    <div class="labeled-input-container">
-                        <label class="input-label" for="task-starttime">From</label>
-                        <InputDate id="task-starttime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@TaskCreated.StartTime" class="date-input"></InputDate>
-                    </div>
-                    <div class="labeled-input-container">
-                        <label class="input-label" for="task-endtime">To</label>
-                        <InputDate id="task-endtime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@TaskCreated.EndTime" class="date-input"></InputDate>
-                    </div>
-                </div>
-                <div class="inline-center full-width">
-                    <InputCheckbox @bind-Value="TaskCreated.IsRecurring" class="checkbox-input" id="task-recurring"></InputCheckbox>
-                    <label for="task-recurring">Is Recurring</label>
-                </div>
-                <div class=@("page" + (TaskCreated.IsRecurring ? " active" : ""))>
-                    <div class="inline-center">
-                        <InputCheckbox id="task-recsun" @bind-Value="TaskCreated.RecurringDays.Sunday" class="checkbox-input"/>
-                        <label for="task-recsun">Sun</label>
-                        <InputCheckbox id="task-recmon" @bind-Value="TaskCreated.RecurringDays.Monday" class="checkbox-input"/>
-                        <label for="task-recmon">Mon</label>
-                        <InputCheckbox id="task-rectue" @bind-Value="TaskCreated.RecurringDays.Tuesday" class="checkbox-input"/>
-                        <label for="task-rectue">Tue</label>
-                        <InputCheckbox id="task-recwed" @bind-Value="TaskCreated.RecurringDays.Wednesday" class="checkbox-input"/>
-                        <label for="task-recwed">Wed</label>
-                        <InputCheckbox id="task-recthu" @bind-Value="TaskCreated.RecurringDays.Thursday" class="checkbox-input"/>
-                        <label for="task-recthu">Thu</label>
-                        <InputCheckbox id="task-recfri" @bind-Value="TaskCreated.RecurringDays.Friday" class="checkbox-input"/>
-                        <label for="task-recfri">Fri</label>
-                        <InputCheckbox id="task-recsat" @bind-Value="TaskCreated.RecurringDays.Saturday" class="checkbox-input"/>
-                        <label for="task-recsat">Sat</label>
-                    </div>
-                </div>
+<MudDialog @bind-IsVisible="CreateDialogOpened" Options="CreateDialogOptions" Style=@($"background-color: {Theme.PaletteDark.Dark}")>
+    <DialogContent>
+        <MudContainer Class="d-flex flex-column gap-4" Style="margin-top: 20px; max-height: 73vh; overflow-y: auto; scrollbar-gutter: stable;">
+            <MudToggleGroup T="ScheduleItemType" @bind-Value="SelectedType" Delimiters="false" DisableRipple="true">
+                <MudToggleItem Value="ScheduleItemType.Task">Task</MudToggleItem>
+                <MudToggleItem Value="ScheduleItemType.Group">Group</MudToggleItem>
+                <MudToggleItem Value="ScheduleItemType.Block">Block</MudToggleItem>
+            </MudToggleGroup>
 
-                <CustomInputSelectComponent TItem="GroupModel" Items="Groups" Selector="x => x.Name"
-                                            ValueChanged="g => TaskCreated.Group = g" ShowDefaultOption="true"
-                                            Class="select-input"/>
-            </EditForm>
-            <EditForm id="group-form" Model="GroupCreated" class=@("page" + (SelectedType == ScheduleItemType.Group ? " active" : "")) OnValidSubmit="CreateGroup">
-                <div class="labeled-input-container">
-                    <InputText id="group-name" DisplayName="Group Name" @bind-Value="@GroupCreated.Name" placeholder="Name" class="text-input" autocomplete="off"></InputText>
-                </div>
-                <ColorPickerComponent @bind-Value="GroupCreated.Color" DefaultColors="@DefaultColors"></ColorPickerComponent>
-            </EditForm>
-            <EditForm id="block-form" Model="BlockCreated" class=@("page" + (SelectedType == ScheduleItemType.Block ? " active" : "")) OnValidSubmit="CreateBlock">
-                <div class="labeled-input-container">
-                    <label class="input-label" for="block-date">Start Date</label>
-                    <InputDate id="block-date" TValue="DateOnly" @bind-Value="@BlockCreated.Date" class="date-input"></InputDate>
-                </div>
-                <div class="inline-center full-width">
-                    <InputCheckbox @bind-Value="BlockCreated.IsAllDay" class="checkbox-input" id="block-allday"></InputCheckbox>
-                    <label for="block-allday">All Day</label>
-                </div>
-                <div class=@("page" + (!BlockCreated.IsAllDay ? " active" : ""))>
-                    <div class="labeled-input-container">
-                        <label class="input-label" for="block-starttime">From</label>
-                        <InputDate id="block-starttime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@BlockCreated.StartTime" class="date-input"></InputDate>
-                    </div>
-                    <div class="labeled-input-container">
-                        <label class="input-label" for="block-endtime">To</label>
-                        <InputDate id="block-endtime" Type="InputDateType.Time" TValue="TimeOnly" @bind-Value="@BlockCreated.EndTime" class="date-input"></InputDate>
-                    </div>
-                </div>
-                <div class="inline-center full-width">
-                    <InputCheckbox @bind-Value="BlockCreated.IsRecurring" class="checkbox-input" id="block-recurring"></InputCheckbox>
-                    <label for="block-recurring">Is Recurring</label>
-                </div>
-                <div class=@("page" + (BlockCreated.IsRecurring ? " active" : ""))>
-                    <div class="inline-center">
-                        <InputCheckbox id="block-recsun" @bind-Value="BlockCreated.RecurringDays.Sunday" class="checkbox-input" />
-                        <label for="block-recsun">Sun</label>
-                        <InputCheckbox id="block-recmon" @bind-Value="BlockCreated.RecurringDays.Monday" class="checkbox-input" />
-                        <label for="block-recmon">Mon</label>
-                        <InputCheckbox id="block-rectue" @bind-Value="BlockCreated.RecurringDays.Tuesday" class="checkbox-input" />
-                        <label for="block-rectue">Tue</label>
-                        <InputCheckbox id="block-recwed" @bind-Value="BlockCreated.RecurringDays.Wednesday" class="checkbox-input" />
-                        <label for="block-recwed">Wed</label>
-                        <InputCheckbox id="block-recthu" @bind-Value="BlockCreated.RecurringDays.Thursday" class="checkbox-input" />
-                        <label for="block-recthu">Thu</label>
-                        <InputCheckbox id="block-recfri" @bind-Value="BlockCreated.RecurringDays.Friday" class="checkbox-input" />
-                        <label for="block-recfri">Fri</label>
-                        <InputCheckbox id="block-recsat" @bind-Value="BlockCreated.RecurringDays.Saturday" class="checkbox-input" />
-                        <label for="block-recsat">Sat</label>
-                    </div>
-                </div>
+            @if (SelectedType == ScheduleItemType.Task)
+            {
+                <EditForm id="task-form" Model="TaskCreated" OnValidSubmit="CreateTask" class="d-flex flex-column gap-4">
+                    <ChildContent Context="task">
 
-                <CustomInputSelectComponent TItem="GroupModel" Items="Groups" Selector="x => x.Name"
-                                            ValueChanged="g => BlockCreated.Group = g" ShowDefaultOption="true"
-                                            Class="select-input"/>
-            </EditForm>
-        </div>
-    </BodyContent>
-    <FooterContent>
-        <div class="dialog-footer-content">
-            <button class="btn btn-primary" type="submit" form="@(SelectedType.ToString().ToLower())-form"><i class="fa-solid fa-check"></i>&nbsp; Create</button>
-        </div>
-    </FooterContent>
-</DialogComponent>
+                        <MudTextField Label="Title" @bind-Value="@TaskCreated.Title" Variant="Variant.Filled" DisableUnderLine="true"/>
+
+                        <MudDatePicker Label="Start Date" @bind-Date="TaskCreated.Date" Variant="Variant.Filled" DisableUnderLine="true"></MudDatePicker>
+
+                        <MudToggleGroup T="bool" @bind-Value="TaskCreated.IsAllDay" CheckMark="true" SelectionMode="SelectionMode.ToggleSelection" DisableRipple="true" Color="Color.Secondary">
+                            <MudToggleItem Value="true" UnselectedIcon="@Icons.Material.Outlined.HourglassFull">All Day</MudToggleItem>
+                        </MudToggleGroup>
+
+                        @if (!TaskCreated.IsAllDay)
+                        {
+                            <MudTimePicker Label="From" @bind-Time="TaskCreated.StartTime"
+                                           AmPm="true"
+                                           MinuteSelectionStep="15" Variant="Variant.Filled" DisableUnderLine="true"></MudTimePicker>
+                            <MudTimePicker Label="To" @bind-Time="TaskCreated.EndTime"
+                                           AmPm="true"
+                                           MinuteSelectionStep="15" Variant="Variant.Filled" DisableUnderLine="true"></MudTimePicker>
+                        }
+
+                        <MudToggleGroup T="bool" @bind-Value="TaskCreated.IsRecurring" CheckMark="true" SelectionMode="SelectionMode.ToggleSelection" DisableRipple="true" Color="Color.Secondary">
+                            <MudToggleItem Value="true" UnselectedIcon="@Icons.Material.Outlined.Repeat">Is Recurring</MudToggleItem>
+                        </MudToggleGroup>
+
+                        @if (TaskCreated.IsRecurring)
+                        {
+                            <MudChipSet MultiSelection="true" Mandatory="true" Class="mx-auto">
+                                <MudChip Text="Sun" Variant="Variant.Outlined" Color="Color.Surface" SelectedColor="Color.Success"></MudChip>
+                                <MudChip Text="Mon" Variant="Variant.Outlined" Color="Color.Surface" SelectedColor="Color.Success"></MudChip>
+                                <MudChip Text="Tue" Variant="Variant.Outlined" Color="Color.Surface" SelectedColor="Color.Success"></MudChip>
+                                <MudChip Text="Wed" Variant="Variant.Outlined" Color="Color.Surface" SelectedColor="Color.Success"></MudChip>
+                                <MudChip Text="Thu" Variant="Variant.Outlined" Color="Color.Surface" SelectedColor="Color.Success"></MudChip>
+                                <MudChip Text="Fri" Variant="Variant.Outlined" Color="Color.Surface" SelectedColor="Color.Success"></MudChip>
+                                <MudChip Text="Sat" Variant="Variant.Outlined" Color="Color.Surface" SelectedColor="Color.Success"></MudChip>
+                            </MudChipSet>
+                        }
+
+                        <MudSelect T="GroupModel" Variant="Variant.Filled" DisableUnderLine="true" Label="Group" @bind-Value="TaskCreated.Group">
+                            @foreach (var group in Groups)
+                            {
+                                <MudSelectItem Value="group">@group.Name</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </ChildContent>
+                </EditForm>
+            }
+            else if (SelectedType == ScheduleItemType.Group)
+            {
+                <EditForm id="group-form" Model="GroupCreated" OnValidSubmit="CreateGroup" class="d-flex flex-column gap-4">
+                    <div class="labeled-input-container">
+                        <InputText id="group-name" DisplayName="Group Name" @bind-Value="@GroupCreated.Name" placeholder="Name" class="text-input" autocomplete="off"></InputText>
+                    </div>
+                    <ColorPickerComponent @bind-Value="GroupCreated.Color" DefaultColors="@DefaultColors"></ColorPickerComponent>
+                </EditForm>
+            }
+            else if (SelectedType == ScheduleItemType.Block)
+            {
+                <EditForm id="block-form" Model="BlockCreated" OnValidSubmit="CreateBlock" class="d-flex flex-column gap-4">
+                    <MudDatePicker Label="Start Date" @bind-Date="BlockCreated.Date"></MudDatePicker>
+
+                    <div class="inline-center full-width">
+                        <InputCheckbox @bind-Value="BlockCreated.IsAllDay" class="checkbox-input" id="block-allday"></InputCheckbox>
+                        <label for="block-allday">All Day</label>
+                    </div>
+                    <div class=@("page" + (!BlockCreated.IsAllDay ? " active" : ""))>
+
+                        <MudTimePicker id="block-starttime" TValue="TimeOnly" @bind-Value="@BlockCreated.StartTime"
+                                       Variant="Variant.Filled" AmPm="true"
+                                       MinuteSelectionStep="15" Label="From"></MudTimePicker>
+
+                        <MudTimePicker id="block-starttime" TValue="TimeOnly" @bind-Value="@BlockCreated.EndTime"
+                                       Variant="Variant.Filled" AmPm="true"
+                                       MinuteSelectionStep="15" Label="To"></MudTimePicker>
+                    </div>
+                    <div class="inline-center full-width">
+                        <InputCheckbox @bind-Value="BlockCreated.IsRecurring" class="checkbox-input" id="block-recurring"></InputCheckbox>
+                        <label for="block-recurring">Is Recurring</label>
+                    </div>
+                    <div class=@("page" + (BlockCreated.IsRecurring ? " active" : ""))>
+                        <div class="inline-center">
+                            <InputCheckbox id="block-recsun" @bind-Value="BlockCreated.RecurringDays.Sunday" class="checkbox-input"/>
+                            <label for="block-recsun">Sun</label>
+                            <InputCheckbox id="block-recmon" @bind-Value="BlockCreated.RecurringDays.Monday" class="checkbox-input"/>
+                            <label for="block-recmon">Mon</label>
+                            <InputCheckbox id="block-rectue" @bind-Value="BlockCreated.RecurringDays.Tuesday" class="checkbox-input"/>
+                            <label for="block-rectue">Tue</label>
+                            <InputCheckbox id="block-recwed" @bind-Value="BlockCreated.RecurringDays.Wednesday" class="checkbox-input"/>
+                            <label for="block-recwed">Wed</label>
+                            <InputCheckbox id="block-recthu" @bind-Value="BlockCreated.RecurringDays.Thursday" class="checkbox-input"/>
+                            <label for="block-recthu">Thu</label>
+                            <InputCheckbox id="block-recfri" @bind-Value="BlockCreated.RecurringDays.Friday" class="checkbox-input"/>
+                            <label for="block-recfri">Fri</label>
+                            <InputCheckbox id="block-recsat" @bind-Value="BlockCreated.RecurringDays.Saturday" class="checkbox-input"/>
+                            <label for="block-recsat">Sat</label>
+                        </div>
+                    </div>
+
+                    <CustomInputSelectComponent TItem="GroupModel" Items="Groups" Selector="x => x.Name"
+                                                ValueChanged="g => BlockCreated.Group = g" ShowDefaultOption="true"
+                                                Class="select-input"/>
+                </EditForm>
+            }
+        </MudContainer>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.AddBox"
+                   FullWidth="true" Class="py-2" IconSize="Size.Large" form="task-form"
+                   ButtonType="ButtonType.Submit">Create</MudButton>
+    </DialogActions>
+</MudDialog>
 
 <div class="time-table-container">
-    <TimeTableComponent Tasks="Tasks" Blocks="Blocks" Groups="Groups"></TimeTableComponent>
+    <MudTableTimeTableComponent Tasks="Tasks" Blocks="Blocks" Groups="Groups"></MudTableTimeTableComponent>
 </div>

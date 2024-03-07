@@ -1,0 +1,131 @@
+﻿.time-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 13px;
+    color: #fff;
+    font-family: -system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    table-layout: fixed;
+    min-height: inherit;
+    overflow: scroll;
+}
+
+    .time-table .cell {
+        text-align: center;
+        width: 175px;
+        height: 47px;
+    }
+
+    .time-table thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .time-table tbody {
+        height: 100%;
+    }
+
+        .time-table thead::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 55px;
+            background: var(--secondary-color-dark);
+            z-index: -1;
+        }
+
+        .time-table thead th:last-child, th:first-child {
+            width: 70px;
+        }
+
+    .time-table tbody .cell {
+        font-size: 0.8rem;
+        font-weight: bold;
+        line-height: 1.4;
+        transition: opacity 0.3s ease;
+        user-select: none;
+        border-radius: 12.005px;
+        background: var(--secondary-color);
+        padding: 0;
+        position: relative;
+    }
+
+    .time-table .cell > span {
+        font-size: 0.8em;
+        font-weight: normal;
+        display: block;
+        width: 100%;
+    }
+
+.task {
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+    top: 0;
+    left: 0;
+}
+
+    .task .task-info {
+        width: 100%;
+        height: 100%;
+        font-weight: bold;
+        font-size: 0.8em;
+        padding: 10px;
+
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .task .task-info p {
+            display: block;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .task .task-info span {
+            display: block;
+            font-weight: normal;
+            color: rgba(255,255,255,0.5);
+            min-width: 0;
+            min-height: 0;
+        }
+
+.block {
+    width: 100%;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    outline: 3px dashed #de9292;
+    outline-offset: -3px;
+    border-radius: 17.005px;
+    padding: 5px;
+    box-sizing: content-box;
+    /*center*/
+    margin-left: -5px;
+    margin-top: -5px;
+}
+
+    .block .block-fill {
+        border-radius: 17.005px;
+        opacity: 0.4;
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+        box-sizing: content-box;
+        margin-left: -5px;
+        margin-top: -5px;
+    }
+
+#current-time {
+    position: relative;
+    border-top: 3px dotted #aaa;
+    width: 100%;
+}

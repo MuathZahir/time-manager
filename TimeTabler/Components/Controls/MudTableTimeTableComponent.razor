@@ -1,51 +1,54 @@
-﻿@* @using TimeTabler.Models
+﻿@using TimeTabler.Models
+@using Color = MudBlazor.Color
 <table class="time-table">
     <thead>
-        <tr>
-            <th><i class="fa-solid fa-chevron-left" style="font-size: 30px;"></i></th>
-            <th>Sun</th>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-            <th><i class="fa-solid fa-chevron-right" style="font-size: 30px;"></i></th>
-        </tr>
+    <tr>
+        <th><MudIconButton Icon="@Icons.Material.Filled.ChevronLeft" Size="Size.Large"></MudIconButton></th>
+        <th>Sun</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
+        <th><MudIconButton Icon="@Icons.Material.Filled.ChevronRight" Size="Size.Large"></MudIconButton></th>
+    </tr>
     </thead>
-
 
     <tbody>
 
-
-        @for (var i = StartTime; i < EndTime; i = i.AddHours(0.5, out _wrapped))
+    @for (var i = StartTime; i < EndTime; i = TimeOnly.FromTimeSpan(i).AddHours(0.5, out _wrapped).ToTimeSpan())
+    {
+        @if (_wrapped > 0)
         {
-            @if (_wrapped > 0)
+            _wrapped = 0;
+            break;
+        }
+
+
+        <tr>
+            <th>@i.ToString("hh\\:mm")</th>
+                
+            @foreach (var day in DaysShown)
             {
-                _wrapped = 0;
-                break;
-            }
+                var task = Tasks.FirstOrDefault(x => x.Date == day && x.StartTime == i);
+                var block = Blocks.FirstOrDefault(x => x.Date == day && x.StartTime == i);
 
-
-            <tr>
-                <th>@i.ToString("hh\\:mm")</th>
-                @foreach (var day in DaysShown)
-                {
-                    var task = Tasks.FirstOrDefault(x => x.Date == day && x.StartTime == i);
-                    var block = Blocks.FirstOrDefault(x => x.Date == day && x.StartTime == i);
-
-                    <td>
+                <td>
+                    <MudPaper Height="47px" Style=@($"background-color:{Theme.PaletteDark.Dark};")>
                         @if (task != null)
                         {
-                            var taskHeight = (task.EndTime - task.StartTime).TotalHours * (47 + 13) * 2 - 13; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
-
-                            <div class="task" style="height: @(taskHeight)px; background-color: @(task.Group?.Color.HexValue ?? "var(--secondary-color-light)");">
-                                <div class="task-info">
-                                    @(task.Title)
-                                </div>
+                            var taskHeight = (task.EndTime - task.StartTime)?.TotalHours * (47 + 13) * 2 - 13; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
+                            <div class="task" >
+                                <MudPaper Height=@($"{taskHeight}px") Style=@($"background-color: {task.Group?.Color.HexValue ?? "var(--secondary-color-light)"};")>
+                                    <div class="task-info">
+                                        <p>@(task.Title)</p>
+                                        <span>@($"{task.StartTime?.ToString(@"hh\:mm")} – {task.EndTime?.ToString(@"hh\:mm")}")</span>
+                                    </div>
+                                </MudPaper>
                             </div>
                         }
-                        
+
                         @if (block != null)
                         {
                             var blockHeight = (block.EndTime - block.StartTime).TotalHours * (47 + 13) * 2 - 13; // Each block is 47px high, border-spacing is 3px, removed the additional 2px
@@ -56,14 +59,15 @@
                             </div>
                         }
 
-                        @if (day == DateTime.Today && i.Hour == DateTime.Now.Hour && i.Minute == DateTime.Now.Minute / 30 * 30)
+                        @if (day == DateTime.Today && i.Hours == DateTime.Now.Hour && i.Minutes == DateTime.Now.Minute / 30 * 30)
                         {
-                            <div id="current-time" style="top: @(-47/2.0 + 47/30.0 * (DateTime.Now.Minute - i.Minute))px"></div>
+                            <div id="current-time" style="top: @(-47/2.0 + 47/30.0 * (DateTime.Now.Minute - i.Minutes))px"></div>
                         }
-                    </td>
-                }
-            </tr>
-        }
+                    </MudPaper>
+                </td>
+            }
+        </tr>
+    }
 
 
     </tbody>
@@ -72,12 +76,14 @@
 
 @code
 {
-    [Parameter] public TimeOnly StartTime { get; set; } = new(0, 0);
-    [Parameter] public TimeOnly EndTime { get; set; } = new(23, 59);
+    [Parameter] public TimeSpan StartTime { get; set; } = new(0, 0, 0);
+    [Parameter] public TimeSpan EndTime { get; set; } = new(23, 59, 59);
 
     [Parameter] public List<TaskModel> Tasks { get; set; } = [];
     [Parameter] public List<BlockModel> Blocks { get; set; } = [];
     [Parameter] public List<GroupModel> Groups { get; set; } = [];
+
+    [CascadingParameter] public MudTheme Theme { get; set; }
 
     public List<DateTime> DaysShown { get; set; } = [];
 
@@ -127,4 +133,3 @@
     }
 
 }
- *@

@@ -2,7 +2,6 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 13px;
-    background: var(--secondary-color-dark);
     color: #fff;
     font-family: -system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }

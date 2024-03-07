@@ -5,11 +5,12 @@
     overflow: hidden;
 }
 
-.page {
+.main-page {
     position: relative;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    height: inherit;
     flex: 1;
     margin-top: 0px;
 }
